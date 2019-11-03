@@ -1,7 +1,6 @@
 <template lang="pug">
   .note-component
     .container(ref="note")
-      span {{ note.index }}
       .title {{ note.title }}
       .text {{ note.text }}
     transition(name="fade")
@@ -40,7 +39,7 @@ export default {
       this.$store.dispatch('deleteNote', this.note.index)
       this.$store.dispatch('toggleDeleteSection', false)
       document.onmousemove = null
-      // this.cancelDelete()
+      this.cancelDelete()
     },
     cancelDelete () {
       const note = this.$refs.note
@@ -112,13 +111,7 @@ export default {
       // Добавляем заметку в переменную для удобства
       const note = this.$refs.note
       // Удаляем слушатель
-      const self = this
-      const shiftX = 0
-      const shiftY = 0
-      document.removeEventListener('mousemove', function mouseMove (e) {
-        console.log('doc', e)
-        self.movingNote(e, shiftX, shiftY)
-      })
+      document.onmousemove = null
       note.style.opacity = null
       // Берем параметры поля удаления
       const deleteSectionPosition = this.getElPosition(document.querySelector('.delete-block'))
@@ -152,25 +145,22 @@ export default {
     }
   },
   mounted () {
-    const self = this
-    this.$refs.note.addEventListener('mousedown', function mouseDown (e) {
-      const coords = self.getElPosition(self.$refs.note)
+    this.$refs.note.addEventListener('mousedown', e => {
+      const coords = this.getElPosition(this.$refs.note)
       const shiftX = e.clientX - coords.left
       const shiftY = e.clientY - coords.top
-      self.prepareMoving(e, shiftX, shiftY)
-      self.toggleActiveDeleteBlock(e)
-      document.addEventListener('mousemove', function mouseMove (e) {
-        self.movingNote(e, shiftX, shiftY)
-        e.stopPropagation()
-      })
+      this.prepareMoving(e, shiftX, shiftY)
+      this.toggleActiveDeleteBlock(e)
+      document.onmousemove = e => {
+        this.movingNote(e, shiftX, shiftY)
+      }
     })
     this.$refs.note.addEventListener('mouseup', e => {
       this.endMoveNote(e)
     })
   },
   beforeDestroy () {
-    this.$refs.note.removeEventListener('mousedown', function mouseDown (e) {
-      console.log(123)
+    this.$refs.note.removeEventListener('mousedown', e => {
       const coords = this.getElPosition(this.$refs.note)
       const shiftX = e.clientX - coords.left
       const shiftY = e.clientY - coords.top
@@ -183,8 +173,6 @@ export default {
     this.$refs.note.removeEventListener('mouseup', e => {
       this.endMoveNote(e)
     })
-    this.$refs.note.onmousedown = null
-    this.$refs.note.onmouseup = null
     document.onmousemove = null
   }
 }
