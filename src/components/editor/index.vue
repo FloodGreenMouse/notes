@@ -1,20 +1,20 @@
 <template lang="pug">
-.editor-component.flex.center
+.editor-component.flex.center(:style="{'background-color': color}")
   .container.flex.j-center.column
     span.title(v-show="!showEditor" @click="show") Заметка...
     .fields.flex.column(v-if="showEditor")
       input.title-area(
-        v-model="title"
+        v-model.trim="title"
         type="text"
         placeholder="Название заметки"
         ref="titleArea")
       textarea.text-area(
-        v-model="text"
+        v-model.trim="text"
         placeholder="Текст заметки"
         rows="1"
         ref="textArea")
       .buttons.flex.j-end.a-center
-        vPalette
+        vPalette(@changeColor="changeColor")
         button.save-button(@click="addNote") Сохранить
 </template>
 
@@ -30,10 +30,14 @@ export default {
     return {
       showEditor: false,
       title: '',
-      text: ''
+      text: '',
+      color: 'white'
     }
   },
   methods: {
+    changeColor (color) {
+      this.color = color
+    },
     show () {
       if (!this.showEditor) {
         this.showEditor = true
@@ -50,10 +54,12 @@ export default {
       if (this.title.length) {
         const note = {
           title: this.title,
-          text: this.text
+          text: this.text,
+          color: this.color
         }
         this.$store.dispatch('addNote', note)
         this.showEditor = false
+        this.color = 'white'
       }
     }
   },
@@ -64,6 +70,7 @@ export default {
         this.text = ''
         this.showEditor = false
         this.showEditor = false
+        this.color = 'white'
       }
     })
   },
@@ -79,6 +86,8 @@ export default {
     flex: 1;
     max-width: 500px;
     margin: 20px 10px 100px 10px;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
     .title {
       display: block;
       padding: 15px;
@@ -97,6 +106,7 @@ export default {
       font-size: 16px;
       font-weight: 500;
       border-radius: 5px;
+      background-color: transparent;
       transition: $trs3;
       &::placeholder {
         transition: $trs3;

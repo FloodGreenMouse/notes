@@ -1,6 +1,10 @@
 <template lang="pug">
   .note-component
-    .container(ref="note")
+    .container(
+      ref="note"
+      @click="openModal"
+      @mouseup="endMoveNote"
+      :style="{'background-color': note.color}")
       .title {{ note.title }}
       .text {{ note.text }}
     transition(name="fade")
@@ -31,7 +35,9 @@ export default {
   data () {
     return {
       showModal: false,
-      showButtons: false
+      showButtons: false,
+      isMoving: false,
+      timer: null
     }
   },
   methods: {
@@ -45,11 +51,14 @@ export default {
       const note = this.$refs.note
       this.$store.dispatch('toggleDeleteSection', false)
       note.style = null
+      note.style.backgroundColor = this.note.color
       this.showButtons = false
     },
     openModal () {
-      this.showModal = true
-      document.body.style.overflow = 'hidden'
+      if (!this.isMoving) {
+        this.showModal = true
+      }
+      // document.body.style.overflow = 'hidden'
     },
     closeModal () {
       this.showModal = false
@@ -81,6 +90,8 @@ export default {
       window.onresize = null
       // Добавляем заметку в переменную для удобства
       const note = this.$refs.note
+      note.style = null
+      note.style.backgroundColor = this.note.color
       // Выключаем поле удаления
       this.$store.dispatch('toggleDeleteSection', false)
       // Добавляем индекс текущей заметки к удалению
@@ -97,8 +108,11 @@ export default {
       deleteSection.classList.remove('delete-block--active')
       this.$store.dispatch('toggleDeleteSection', true)
       this.movingNote(e, shiftX, shiftY)
+      this.isMoving = false
     },
     movingNote (e, shiftX, shiftY) {
+      this.isMoving = true
+      this.showModal = false
       this.showButtons = false
       // Отслеживаем перемещение курсора
       this.$refs.note.style.left = `${e.clientX - shiftX}px`
@@ -107,7 +121,12 @@ export default {
       this.toggleActiveDeleteBlock(e)
     },
     endMoveNote (e) {
-      this.showModal = false
+      clearTimeout(this.timer)
+      if (this.isMoving) {
+        setTimeout(() => {
+          this.isMoving = false
+        }, 10)
+      }
       // Добавляем заметку в переменную для удобства
       const note = this.$refs.note
       // Удаляем слушатель
@@ -115,31 +134,29 @@ export default {
       note.style.opacity = null
       // Берем параметры поля удаления
       const deleteSectionPosition = this.getElPosition(document.querySelector('.delete-block'))
+      // Параметры заметки
       // Захватываем поле удаления в переменную
       const deleteSection = document.querySelector('.delete-block')
       // Если курсор находится в поле удаления
       if (deleteSectionPosition.left + deleteSectionPosition.width > e.clientX && deleteSectionPosition.right - deleteSectionPosition.width < e.clientX) {
-        this.showModal = false
         deleteSection.classList.add('delete-block--active')
-        note.style.left = `${deleteSectionPosition.left - deleteSectionPosition.width}px`
-        note.style.top = `${deleteSectionPosition.top + 50}px`
+        // Позиционирование заметки относительно окна удаления
+        note.style.left = '50%'
+        note.style.transform = 'translateX(-50%)'
+        note.style.top = `${deleteSectionPosition.top + 150}px`
         note.style.transition = 'all 0.3s ease'
         this.showButtons = true
-        this.$refs.buttons.style.top = `${deleteSectionPosition.bottom - 40}px`
-        this.$refs.buttons.style.left = note.style.left
         window.onresize = () => {
-          const deleteSectionPosition = this.getElPosition(document.querySelector('.delete-block'))
-          note.style.left = `${deleteSectionPosition.left - deleteSectionPosition.width}px`
-          note.style.top = `${deleteSectionPosition.top + 50}px`
-          this.$refs.buttons.style.top = `${deleteSectionPosition.bottom - 40}px`
+          note.style.top = `${deleteSectionPosition.top + 150}px`
+          this.$refs.buttons.style.top = `${deleteSectionPosition.height - 40}px`
           this.$refs.buttons.style.left = note.style.left
         }
       } else {
-        this.showModal = false
         // Если курсор НЕ находится в поле удаления
         deleteSection.classList.remove('delete-block--hovered')
         this.$store.dispatch('toggleDeleteSection', false)
         note.style = null
+        note.style.backgroundColor = this.note.color
         this.showButtons = false
       }
     }
@@ -151,9 +168,12 @@ export default {
       const shiftY = e.clientY - coords.top
       this.prepareMoving(e, shiftX, shiftY)
       this.toggleActiveDeleteBlock(e)
-      document.onmousemove = e => {
-        this.movingNote(e, shiftX, shiftY)
-      }
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
+        document.onmousemove = e => {
+          this.movingNote(e, shiftX, shiftY)
+        }
+      }, 100)
     })
     this.$refs.note.addEventListener('mouseup', e => {
       this.endMoveNote(e)
@@ -166,13 +186,14 @@ export default {
       const shiftY = e.clientY - coords.top
       this.prepareMoving(e, shiftX, shiftY)
       this.toggleActiveDeleteBlock(e)
+      clearTimeout(this.timer)
       document.onmousemove = e => {
         this.movingNote(e, shiftX, shiftY)
       }
     })
-    this.$refs.note.removeEventListener('mouseup', e => {
-      this.endMoveNote(e)
-    })
+    // this.$refs.note.removeEventListener('mouseup', e => {
+    //   this.endMoveNote(e)
+    // })
     document.onmousemove = null
   }
 }
@@ -209,6 +230,9 @@ export default {
     .buttons-block {
       position: fixed;
       transition: $trs3;
+      left: 50%;
+      bottom: 10%;
+      transform: translateX(-50%);
       z-index: 30;
       .button {
         background-color: $color-white;

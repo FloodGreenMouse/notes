@@ -2,7 +2,7 @@
   .delete-section-component
     .delete-block.flex.center
       .delete-block-wrapper
-      span.message Удалить заметку?
+        span.message Удалить заметку?
       .delete-button.flex.center
         iconTrash
 </template>
@@ -70,13 +70,16 @@ export default {
         }
       }
       &.delete-block--active {
+        width: 100%;
+        height: 100%;
         .delete-block-wrapper {
           right: 0;
-          width: 100%;
-          height: 100%;
           border-radius: 10px;
           background-color: rgba($color-primary, 0.8);
           animation: delete-block--active 0.2s ease 1 forwards;
+        }
+        .delete-button {
+          opacity: 0;
         }
         .buttons-block {
           opacity: 1;
@@ -98,11 +101,14 @@ export default {
       }
       .message {
         position: absolute;
-        left: -100%;
-        top: 20px;
+        display: block;
+        left: 0;
+        right: 0;
+        text-align: center;
+        top: 40px;
         font-weight: 900;
         opacity: 0;
-        font-size: 20px;
+        font-size: 24px;
         color: $color-white;
         transition: $trs3;
       }
@@ -128,7 +134,7 @@ export default {
       height: 10%;
     }
     100% {
-      width: 250%;
+      width: 100%;
       height: 100%;
     }
   }
