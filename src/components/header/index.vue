@@ -3,7 +3,7 @@
     .logo.flex.a-center
       img(src="/img/logo.png")
       span Notes
-    .settings
+    //.settings
       vSettings
 </template>
 

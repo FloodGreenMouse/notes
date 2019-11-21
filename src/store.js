@@ -21,6 +21,10 @@ export default new Vuex.Store({
 
     notesThirdColumn: state => {
       return state.notes.filter((note, i) => i % 3 === 2)
+    },
+
+    getCurrentNote: state => index => {
+      return state.notes.find(note => note.index === index)
     }
   },
 
@@ -35,6 +39,10 @@ export default new Vuex.Store({
 
     deleteNote ({ commit }, index) {
       commit('DELETE_NOTE', index)
+    },
+
+    updateNote ({ commit }, note) {
+      commit('UPDATE_NOTE', note)
     },
 
     toggleDeleteSection ({ commit }, value) {
@@ -56,6 +64,16 @@ export default new Vuex.Store({
       state.notes.forEach((note, i) => {
         if (note.index === index) {
           state.notes.splice(i, 1)
+        }
+      })
+    },
+
+    UPDATE_NOTE (state, note) {
+      state.notes.forEach((item, i) => {
+        if (item.index === note.index) {
+          state.notes[i].title = note.title
+          state.notes[i].text = note.text
+          state.notes[i].color = note.color
         }
       })
     },

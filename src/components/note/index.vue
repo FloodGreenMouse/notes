@@ -11,11 +11,11 @@
       .buttons-block(v-show="showButtons" ref="buttons")
         button.button(@click="deleteNote") Да
         button.button(@click="cancelDelete") Нет
-    vModal(
-      :title="note.title"
-      :text="note.text"
-      :show="showModal"
-      @close="closeModal")
+    transition(name="fade")
+      vModal(
+        v-if="showModal"
+        :note="note"
+        @close="closeModal")
 </template>
 
 <script>
@@ -217,12 +217,13 @@ export default {
       height: 200px;
       cursor: pointer;
       z-index: 1;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+      box-shadow: 0 3px 4px rgba(0,0,0,0.1), 0 3px 4px rgba(0,0,0,0.2);
       border-radius: 5px;
       border: 1px solid rgba($color-dark, 0.3);
       background-color: $color-white;
       overflow-y: hidden;
       transform: rotate(0deg);
+      transition: box-shadow 0.3s ease;
       &:hover {
         box-shadow: 0 5px 7px rgba(0,0,0,0.26), 0 3px 7px rgba(0,0,0,0.33);
       }

@@ -59,7 +59,7 @@ export default {
         }
         this.$store.dispatch('addNote', note)
         this.showEditor = false
-        this.color = 'white'
+        this.color = '#ffffff'
       }
     }
   },
@@ -70,7 +70,7 @@ export default {
         this.text = ''
         this.showEditor = false
         this.showEditor = false
-        this.color = 'white'
+        this.color = '#ffffff'
       }
     })
   },
@@ -127,7 +127,7 @@ export default {
     .buttons {
       padding: 20px 25px;
       .save-button {
-        border: 0;
+        border: 1px solid transparent;
         padding: 10px 15px;
         border-radius: 5px;
         cursor: pointer;
@@ -136,8 +136,8 @@ export default {
         user-select: none;
         font-weight: 900;
         &:hover {
-          background-color: rgba(0, 0, 0, 0.2);
-          box-shadow: 0 3px 6px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.2);
+          border-color: rgba($color-dark, 0.3);
+          box-shadow: 0 3px 3px rgba(0,0,0,0.1), 0 3px 3px rgba(0,0,0,0.2);
         }
       }
     }

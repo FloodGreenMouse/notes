@@ -23,18 +23,18 @@ export default {
     return {
       showPalette: false,
       colors: [
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'green'
+        '#ffffff',
+        '#f28b82',
+        '#fbbc04',
+        '#fff475',
+        '#ccff90',
+        '#a7ffeb',
+        '#cbf0f8',
+        '#aecbfa',
+        '#d7aefb',
+        '#fdcfe8',
+        '#e6c9a8',
+        '#e8eaed'
       ]
     }
   },
@@ -90,20 +90,28 @@ export default {
       top: calc(100% + 5px);
       right: 0;
       left: 0;
-      width: 130px;
-      height: 110px;
+      width: 150px;
+      height: 125px;
       background-color: $color-white;
       box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
       padding: 10px 0 10px 10px;
+      border-radius: 5px;
       .color {
         display: inline-block;
         margin-bottom: 10px;
         margin-right: 10px;
-        width: 20px;
-        height: 20px;
+        width: 25px;
+        height: 25px;
+        border: 2px solid lighten($color-dark, 50%);
         border-radius: 50%;
         background-color: aquamarine;
         cursor: pointer;
+        overflow: hidden;
+        transform: scale(1);
+        transition: $trs3;
+        &:hover {
+          transform: scale(1.1);
+        }
       }
     }
   }
