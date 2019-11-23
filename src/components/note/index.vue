@@ -7,6 +7,8 @@
       :style="{'background-color': note.color}")
       .title {{ note.title }}
       .text {{ note.text }}
+    .delete-button.flex.center(@click="deleteNote")
+      iconTrash
     transition(name="fade")
       .buttons-block(v-show="showButtons" ref="buttons")
         button.button(@click="deleteNote") Да
@@ -19,11 +21,14 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import iconTrash from '../icons/trash'
 import vModal from './modal'
 
 export default {
   name: 'note-component',
   components: {
+    iconTrash,
     vModal
   },
   props: {
@@ -40,6 +45,11 @@ export default {
       timer: null
     }
   },
+  computed: {
+    ...mapState({
+      showDeleteSection: state => state.showDeleteSection
+    })
+  },
   methods: {
     deleteNote () {
       this.$store.dispatch('deleteNote', this.note.index)
@@ -55,7 +65,7 @@ export default {
       this.showButtons = false
     },
     openModal () {
-      if (!this.isMoving) {
+      if (!this.isMoving && !this.showDeleteSection) {
         this.showModal = true
       }
       // document.body.style.overflow = 'hidden'
@@ -97,7 +107,8 @@ export default {
       // Добавляем индекс текущей заметки к удалению
       this.$store.dispatch('addNoteToDelete', this.note.index)
       // Добавляем заметке стили
-      note.style.width = `${this.$el.getBoundingClientRect().width}px`
+      note.style.maxWidth = `${this.$el.getBoundingClientRect().width}px`
+      note.style.width = 'calc(100% - 20px)'
       note.style.position = 'fixed'
       note.style.zIndex = '30'
       note.style.opacity = '0.8'
@@ -163,17 +174,19 @@ export default {
   },
   mounted () {
     this.$refs.note.addEventListener('mousedown', e => {
-      const coords = this.getElPosition(this.$refs.note)
-      const shiftX = e.clientX - coords.left
-      const shiftY = e.clientY - coords.top
-      this.prepareMoving(e, shiftX, shiftY)
-      this.toggleActiveDeleteBlock(e)
-      clearTimeout(this.timer)
-      this.timer = setTimeout(() => {
-        document.onmousemove = e => {
-          this.movingNote(e, shiftX, shiftY)
-        }
-      }, 100)
+      if (window.innerWidth > 1024) {
+        const coords = this.getElPosition(this.$refs.note)
+        const shiftX = e.clientX - coords.left
+        const shiftY = e.clientY - coords.top
+        this.prepareMoving(e, shiftX, shiftY)
+        this.toggleActiveDeleteBlock(e)
+        clearTimeout(this.timer)
+        this.timer = setTimeout(() => {
+          document.onmousemove = e => {
+            this.movingNote(e, shiftX, shiftY)
+          }
+        }, 100)
+      }
     })
     this.$refs.note.addEventListener('mouseup', e => {
       this.endMoveNote(e)
@@ -228,6 +241,21 @@ export default {
         box-shadow: 0 5px 7px rgba(0,0,0,0.26), 0 3px 7px rgba(0,0,0,0.33);
       }
     }
+    .delete-button {
+      position: absolute;
+      display: none;
+      top: 10px;
+      right: 10px;
+      height: 35px;
+      width: 35px;
+      border-radius: 50%;
+      z-index: 1;
+      box-shadow: inset 0 0 5px rgba($color-dark, 0.2);
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
     .buttons-block {
       position: fixed;
       transition: $trs3;
@@ -241,7 +269,7 @@ export default {
         border-radius: 5px;
         padding: 5px 10px;
         margin-right: 10px;
-        font-weight: 900;
+        font-weight: 400;
         cursor: pointer;
       }
     }
@@ -252,6 +280,14 @@ export default {
       margin-bottom: 25px;
       word-break: break-all;
       word-break: break-word;
+    }
+  }
+
+  @include md {
+    .note-component {
+      .delete-button {
+        display: flex;
+      }
     }
   }
 </style>

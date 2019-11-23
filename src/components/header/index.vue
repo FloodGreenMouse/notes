@@ -34,7 +34,7 @@ export default {
       span {
         margin-left: 5px;
         cursor: default;
-        font-weight: 900;
+        font-weight: 400;
       }
     }
   }

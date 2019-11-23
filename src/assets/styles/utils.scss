@@ -177,6 +177,14 @@
     .mobile {
       display: block;
     }
+    .col {
+      &-sm-4 {
+        width: calc(100% / 4 * 4);
+      }
+      &-sm-8 {
+        width: 100%;
+      }
+    }
   }
   @include xs {
     .col {

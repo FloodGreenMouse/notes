@@ -92,8 +92,9 @@ export default {
       display: block;
       padding: 15px;
       user-select: none;
-      font-weight: 900;
+      font-weight: 400;
       cursor: text;
+      color: rgba($color-dark, 0.8);
     }
     .container {
       width: 100%;
@@ -104,7 +105,7 @@ export default {
       outline: none;
       border: 0;
       font-size: 16px;
-      font-weight: 500;
+      font-weight: 400;
       border-radius: 5px;
       background-color: transparent;
       transition: $trs3;
@@ -134,7 +135,8 @@ export default {
         transition: $trs3;
         background-color: transparent;
         user-select: none;
-        font-weight: 900;
+        font-weight: 400;
+        color: rgba($color-dark, 0.8);
         &:hover {
           border-color: rgba($color-dark, 0.3);
           box-shadow: 0 3px 3px rgba(0,0,0,0.1), 0 3px 3px rgba(0,0,0,0.2);

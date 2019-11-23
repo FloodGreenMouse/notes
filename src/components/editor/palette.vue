@@ -82,7 +82,7 @@ export default {
       cursor: pointer;
       width: 20px;
       height: 20px;
-      margin-right: 20px;
+      margin: 0 20px;
       outline: none;
     }
     .colors {
@@ -112,6 +112,16 @@ export default {
         &:hover {
           transform: scale(1.1);
         }
+      }
+    }
+  }
+
+  @include md {
+    .palette-component {
+      .colors {
+        width: 220px;
+        height: 86px;
+        left: auto;
       }
     }
   }

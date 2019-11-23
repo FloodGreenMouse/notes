@@ -4,14 +4,14 @@
     vEditor
   transition(name="fade")
     deleteSection(v-show="showDeleteSection")
-  .notes.flex.j-center
-    .notes-column.flex.col-3.j-start.column
+  .notes.flex.j-center.wrap
+    .notes-column.flex.col-sm-8.col-md-4.col-3.j-start.column
       .note.col-12(v-for="(note, i) in notesFirstColumn" :key="i")
         vNote(:note="note")
-    .notes-column.flex.col-3.j-start.column
+    .notes-column.flex.col-sm-8.col-md-4.col-3.j-start.column
       .note.col-12(v-for="(note, i) in notesSecondColumn" :key="i")
         vNote(:note="note")
-    .notes-column.flex.col-3.j-start.column
+    .notes-column.flex.col-sm-8.col-md-4.col-3.j-start.column
       .note.col-12(v-for="(note, i) in notesThirdColumn" :key="i")
         vNote(:note="note")
 </template>
@@ -45,6 +45,7 @@ export default {
 <style lang="scss" scoped>
   .page.home {
     .notes {
+      justify-content: center;
       .notes-column {
         position: relative;
         padding: 10px;
@@ -72,6 +73,17 @@ export default {
           height: 100%;
           background-color: rgba($color-primary, 0.3);
           transition: $trs3;
+        }
+      }
+    }
+  }
+
+  @include md {
+    .page.home {
+      .notes {
+        justify-content: flex-start;
+        .notes-column {
+          padding: 0 10px;
         }
       }
     }

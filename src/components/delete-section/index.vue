@@ -106,7 +106,7 @@ export default {
         right: 0;
         text-align: center;
         top: 40px;
-        font-weight: 900;
+        font-weight: 400;
         opacity: 0;
         font-size: 24px;
         color: $color-white;

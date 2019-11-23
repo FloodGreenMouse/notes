@@ -55,8 +55,8 @@ $xs: 575px;
 @mixin font-face ($font-family, $src, $font-weight: normal, $font-style: normal) {
   @font-face {
     font-family: $font-family;
+    src: url('#{'/assets/fonts/'+$src}.ttf') format('ttf');
     font-weight: $font-weight;
     font-style: $font-style;
-    src: url('#{'../src/assets/fonts/'+$src}.ttf') format('truetype');
   }
 }

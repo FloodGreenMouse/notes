@@ -1,4 +1,7 @@
-$font-family-default: 'Open Sans', sans-serif;
+@include font-face('Roboto', 'Roboto-Regular', 300, normal)
+@include font-face('Roboto', 'Roboto-Bold', 900, normal)
+
+$font-family-default: 'Roboto', sans-serif;
 
 $font-size-default: 15px;
 
